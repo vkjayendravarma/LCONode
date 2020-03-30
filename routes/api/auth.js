@@ -61,4 +61,31 @@ router.post('/register', (req, res) => {
 })
 
 
+// @type : POST
+// @route: /api/auth/login
+// @desc: user login 
+// @access: PUBLIC
+
+router.post('/login', (req, res)=>{
+    const email = req.body.email
+    const password = req.body.password
+
+    Person.findOne({email})
+    .then((person) =>{
+
+        if(person){
+            bcrypt.compare(password, person.password)
+            .then(isCorrect =>{
+                if(isCorrect) res.json({success:true, res:"login"})
+                else res.status(400).json({success:false, res:'password incorrect'})
+            }).catch(err => console.log(err))
+        }
+        else{
+            return res.status(400).json({success:false, error: "User not found please register"})
+        }
+
+    })
+    .catch(err => console.log(err))
+})
+
 module.exports  = router
