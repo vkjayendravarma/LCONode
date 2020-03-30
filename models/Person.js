@@ -15,7 +15,7 @@ const PersonSchema = new Schema({
         required: true
     },
     username:{
-        type:String
+        type:String,
     },
     profilePic:{
         type: String,
