@@ -5,6 +5,7 @@ const jsonwt = require('jsonwebtoken')
 const passport = require('passport')
 const key = require('../../setup/dbconfig').secret
 
+
 // @type : get
 // @route: /api/auth
 // @desc: testing 
@@ -76,7 +77,31 @@ router.post('/login', (req, res)=>{
         if(person){
             bcrypt.compare(password, person.password)
             .then(isCorrect =>{
-                if(isCorrect) res.json({success:true, res:"login"})
+                if(isCorrect) {
+                    // res.json({success:true, res:"login"})
+                    // Use payload to create token 
+
+                    const payload ={
+                        id: person.id,
+                        name: person.name,
+                        email: person.email
+                    }
+
+                    jsonwt.sign(
+                        payload,
+                        key,
+                        {expiresIn:  60*60},
+                        (err, token) =>{
+                            if(err){
+                                res.status(400).json({success: false, message: "login Failed"})
+                            }
+                            else{
+                                res.status(200).json({success: true, token: "Bearer " + token})
+                            }
+                        }
+                    )
+                }
+
                 else res.status(400).json({success:false, res:'password incorrect'})
             }).catch(err => console.log(err))
         }
@@ -86,6 +111,24 @@ router.post('/login', (req, res)=>{
 
     })
     .catch(err => console.log(err))
+})
+
+// @type : GET
+// @route: /api/auth/profile
+// @desc: user profile 
+// @access: PRIVATE
+
+router.get('/profile', passport.authenticate('jwt',{session:false}), (req, res) => {
+    console.log(req.user);
+    res.status(200).json({
+        success: true,
+        result:{
+            id: req.user.id,
+            email: req.user.email,
+            profilePic: req.user.profilePic,
+            name: req.user.name
+        }
+    })
 })
 
 module.exports  = router

@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const passport =require('passport')
 
 
 // all routes here
@@ -24,7 +25,11 @@ mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
         .then(() => console.log('Connected'))
         .catch((err) => console.error(err));
 
+// passport middleware
+app.use(passport.initialize())
 
+// config JWT 
+require('./stratagies/jsonwtStrategy')(passport)
 
 // app testing route    
 app.get('/', (req, res)=>{
