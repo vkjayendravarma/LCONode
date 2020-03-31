@@ -45,7 +45,7 @@ router.post('/register', (req, res) => {
                 bcrypt.hash(newperson.password, salt, (err, hash) => {
                     // Store hash in your password DB.
                     if(err) throw err
-                    else{
+                    {
                         newperson.password = hash
                         newperson.save()
                         .then((personRes) => res.status(200).json(personRes))
@@ -81,7 +81,7 @@ router.post('/login', (req, res)=>{
                     // res.json({success:true, res:"login"})
                     // Use payload to create token 
 
-                    const payload ={
+                    const payload = {
                         id: person.id,
                         name: person.name,
                         email: person.email

@@ -1,4 +1,4 @@
 module.exports = {
-    mongoURL: 'mongodb+srv://keshav:nodejsk@cluster0-rft4s.mongodb.net/test?retryWrites=true&w=majority',
+    mongoURL: 'mongodb://127.0.0.1:27017/nodejstute',
     secret: 'secretKey'
 }
