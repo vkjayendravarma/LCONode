@@ -105,7 +105,7 @@ router.post('/', passport.authenticate('jwt', {
 // @type : GET
 // @route: /api/profile/userName
 // @desc: Individul user profile Update with username
-// @access: PRIVATE
+// @access: PUBLIC
 
 router.get("/:username", (req, res) => {
     
