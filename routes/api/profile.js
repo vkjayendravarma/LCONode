@@ -22,7 +22,7 @@ router.get('/',
     (req, res) => {
 
         Profile.findOne({
-                email: req.user.id
+                email: req.user.email
             })
             .then((profile) => {
                 if (profile) {
@@ -74,7 +74,7 @@ router.post('/', passport.authenticate('jwt', {
                 Profile.findOneAndUpdate(
                   { user: req.body.id },
                   { $set: profileValues },
-                  { new: false }
+                  { new: true }
                 ).then(profileUpdated => { console.log("afterUpdate");
                 console.log(profileUpdated);
                 
@@ -83,7 +83,7 @@ router.post('/', passport.authenticate('jwt', {
             }
             
             else {
-                Profile.findOne({ userName: profileValues.username })
+                Profile.findOne({ userName: profileValues.userName })
                   .then(profile => {
                     //Username already exists
                     if (profile) {
@@ -101,6 +101,29 @@ router.post('/', passport.authenticate('jwt', {
         .catch(err => console.log(err))
 })
 
+
+// @type : GET
+// @route: /api/profile/userName
+// @desc: Individul user profile Update with username
+// @access: PRIVATE
+
+router.get("/:username", (req, res) => {
+    
+    Profile.findOne({ userName: req.params.username })
+      .populate('user',['name', 'profilePic'])
+      .then(profile => {
+        if (!profile) {
+          res.status(404).json({ usernotfound: "User not found" });
+        }
+        else{
+            console.log("profile");   
+            console.log(profile)     
+            res.status(200).json(profile);
+        }
+        
+      })
+      .catch(err => console.log("Error in fetching username " + err));
+  });
 
 
 module.exports = router
