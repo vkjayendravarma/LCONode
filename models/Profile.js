@@ -39,7 +39,6 @@ const ProfileSchema = new Schema({
             },
             from:{
                 type: Date,
-                required: true
             },
             to: {
                 type: Date
